@@ -12,3 +12,7 @@ Following these upon wireframes use Spring Boot framework to implement backend A
 2. Create car management feature with pagination.
 3. Optional: In car management screen make the grid sortable(Name, Model, Manufacture, Buy Date) and apply filter.
 > Requirement: Java 11+, Spring Boot 4, Spring JPA, Hibernate, Posgres.
+
+
+### DB Diagram
+![image](https://user-images.githubusercontent.com/57941238/225879027-e75c90cf-6546-415e-9456-405a5d32e8e6.png)
