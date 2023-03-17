@@ -1,20 +1,28 @@
 package com.xcorp.springbootpractice.Controller;
 
 import com.xcorp.springbootpractice.Model.Manufacture;
+import com.xcorp.springbootpractice.Model.Page;
 import com.xcorp.springbootpractice.Service.ManufactureService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/manufacture")
+@RequestMapping("/api/manufacture")
 public class ManufactureController {
     @Autowired
     ManufactureService manufactureService;
 
+    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(ManufactureController.class);
+
     @GetMapping()
-    public void getAll(){
-        manufactureService.getAllManufactures();
+    public ResponseEntity<?> getAll(@RequestBody Page page){
+        Pageable pageable = PageRequest.of(page.getPage() - 1, page.getSize());
+       return ResponseEntity.ok(manufactureService.getAllManufactures(pageable));
     }
 
     @PostMapping()

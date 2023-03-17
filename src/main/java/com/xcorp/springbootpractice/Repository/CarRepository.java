@@ -3,8 +3,6 @@ package com.xcorp.springbootpractice.Repository;
 import com.xcorp.springbootpractice.Model.Car;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
 public interface CarRepository extends JpaRepository<Car, String> {
 
     Car findCarById(String id);

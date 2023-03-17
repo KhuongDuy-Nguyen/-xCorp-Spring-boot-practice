@@ -1,21 +1,24 @@
 package com.xcorp.springbootpractice.Controller;
 
 import com.xcorp.springbootpractice.Model.Car;
+import com.xcorp.springbootpractice.Model.Page;
 import com.xcorp.springbootpractice.Service.CarService;
-import com.xcorp.springbootpractice.Service.Impl.CarServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/car")
+@RequestMapping("/api/car")
 public class CarController {
     @Autowired
     private CarService carService;
 
     @GetMapping()
-    public ResponseEntity<?> getAll(){
-        return ResponseEntity.ok(carService.getAllCars());
+    public ResponseEntity<?> getAll(@RequestBody Page page) {
+        Pageable pageable = PageRequest.of(page.getPage() - 1, page.getSize());
+        return ResponseEntity.ok(carService.getAllCars(pageable));
     }
 
     @PostMapping()

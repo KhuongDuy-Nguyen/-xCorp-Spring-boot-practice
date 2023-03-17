@@ -2,21 +2,23 @@ package com.xcorp.springbootpractice.Service.Impl;
 
 import com.xcorp.springbootpractice.Model.Manufacture;
 import com.xcorp.springbootpractice.Repository.ManufactureRepository;
+import com.xcorp.springbootpractice.Service.ManufactureService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ManufactureServiceImpl implements com.xcorp.springbootpractice.Service.ManufactureService {
+public class ManufactureServiceImpl implements ManufactureService {
     @Autowired
     private ManufactureRepository manufactureRepository;
 
     @Override
-    public List<Manufacture> getAllManufactures(){
-        return manufactureRepository.findAll();
+    public Page<List<Manufacture>> getAllManufactures(Pageable pageable){
+        return manufactureRepository.findAll(pageable).map(List::of);
     }
 
     private boolean checkHasId(String id){
@@ -43,10 +45,10 @@ public class ManufactureServiceImpl implements com.xcorp.springbootpractice.Serv
     }
 
     @Override
-    public List<Manufacture> removeManufacture(String id) throws Exception {
+    public String removeManufacture(String id) throws Exception {
         if(checkHasId(id)){
             manufactureRepository.deleteById(id);
-            return getAllManufactures();
+            return "Delete success";
         }else{
             throw new Exception("Manufacture not found");
         }

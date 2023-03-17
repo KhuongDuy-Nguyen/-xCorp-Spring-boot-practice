@@ -5,14 +5,12 @@ import com.xcorp.springbootpractice.Model.Manufacture;
 import com.xcorp.springbootpractice.Repository.CarRepository;
 import com.xcorp.springbootpractice.Repository.ManufactureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Service
 public class CarServiceImpl implements com.xcorp.springbootpractice.Service.CarService {
@@ -23,11 +21,9 @@ public class CarServiceImpl implements com.xcorp.springbootpractice.Service.CarS
     @Autowired
     private ManufactureRepository manufactureRepository;
 
-    private Logger log = Logger.getLogger(CarServiceImpl.class.getName());
-    
     @Override
-    public List<Car> getAllCars(){
-        return carRepository.findAll();
+    public Page<List<Car>> getAllCars(Pageable pageable) {
+        return carRepository.findAll(pageable).map(List::of);
     }
 
     private boolean checkHasCar(String id){
@@ -77,10 +73,10 @@ public class CarServiceImpl implements com.xcorp.springbootpractice.Service.CarS
 
     
     @Override
-    public List<Car> removeCar(String id) throws Exception {
+    public String removeCar(String id) throws Exception {
         if(checkHasCar(id)){
             carRepository.deleteById(id);
-            return getAllCars();
+            return "Delete success";
         }else{
             throw new Exception("Car not found");
         }
