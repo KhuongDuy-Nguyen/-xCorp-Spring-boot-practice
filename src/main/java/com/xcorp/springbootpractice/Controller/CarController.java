@@ -6,6 +6,7 @@ import com.xcorp.springbootpractice.Service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,19 @@ public class CarController {
 
     @GetMapping()
     public ResponseEntity<?> getAll(@RequestBody Page page) {
-        Pageable pageable = PageRequest.of(page.getPage() - 1, page.getSize());
+        Pageable pageable = PageRequest.of(page.getPageNumber() - 1, page.getSize());
+        return ResponseEntity.ok(carService.getAllCars(pageable));
+    }
+
+    @GetMapping("/desc")
+    public ResponseEntity<?> getAllByDesc(@RequestBody Page page) {
+        Pageable pageable = PageRequest.of(page.getPageNumber() - 1, page.getSize(), Sort.by(page.getSort()).descending());
+        return ResponseEntity.ok(carService.getAllCars(pageable));
+    }
+
+    @GetMapping("/asc")
+    public ResponseEntity<?> getAllByAsc(@RequestBody Page page) {
+        Pageable pageable = PageRequest.of(page.getPageNumber() - 1, page.getSize(), Sort.by(page.getSort()).ascending());
         return ResponseEntity.ok(carService.getAllCars(pageable));
     }
 

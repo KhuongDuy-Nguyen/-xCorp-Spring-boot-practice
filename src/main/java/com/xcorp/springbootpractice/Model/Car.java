@@ -1,5 +1,6 @@
 package com.xcorp.springbootpractice.Model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,16 +27,18 @@ public class Car {
     private String name;
 
     @NotNull
-    private String model;
+    @ManyToOne
+    private Model model;
 
     @NotNull
     @ManyToOne
     private Manufacture manufactureId;
 
     @NotNull
-    private Date buyDate = new Date();
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "GMT+7")
+    private Date buyDate;
 
-    public Car(String name, String model, Manufacture manufactureId, Date buyDate) {
+    public Car(String name, Model model, Manufacture manufactureId, Date buyDate) {
         this.name = name;
         this.model = model;
         this.manufactureId = manufactureId;
