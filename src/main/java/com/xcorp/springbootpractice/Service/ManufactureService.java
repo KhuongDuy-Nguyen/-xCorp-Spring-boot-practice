@@ -11,7 +11,7 @@ public interface ManufactureService {
 
     Manufacture createManufacture(Manufacture manufacture);
 
-    Manufacture updateManufacture(Manufacture newManufacture) throws Exception;
+    Manufacture updateManufacture(Manufacture newManufacture, String id) throws Exception;
 
     String removeManufacture(String id) throws Exception;
 }

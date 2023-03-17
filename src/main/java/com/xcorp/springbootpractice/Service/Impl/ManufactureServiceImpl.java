@@ -32,16 +32,15 @@ public class ManufactureServiceImpl implements ManufactureService {
     }
 
     @Override
-    public Manufacture updateManufacture(Manufacture newManufacture) throws Exception {
-        if(checkHasId(newManufacture.getId())){
-            Manufacture oldManufacture = manufactureRepository.getManufactureById(newManufacture.getId());
-
-            oldManufacture.setName(newManufacture.getName());
-            oldManufacture.setAddress(newManufacture.getAddress());
-            return manufactureRepository.save(oldManufacture);
-        }else{
-            throw new Exception("Manufacture not found");
-        }
+    public Manufacture updateManufacture(Manufacture newManufacture, String id) throws Exception {
+        return manufactureRepository.findById(id).map(manufacture -> {
+            manufacture.setName(newManufacture.getName());
+            manufacture.setAddress(newManufacture.getAddress());
+            return manufactureRepository.save(manufacture);
+        }).orElseGet(() -> {
+            newManufacture.setId(id);
+            return manufactureRepository.save(newManufacture);
+        });
     }
 
     @Override
