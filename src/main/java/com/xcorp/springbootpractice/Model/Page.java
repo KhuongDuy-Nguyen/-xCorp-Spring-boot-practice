@@ -12,6 +12,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Page {
-    private int page;
+    private int pageNumber;
     private int size;
+    private String sort;
+
+    public Page(int pageNumber, int size) {
+        this.pageNumber = pageNumber;
+        this.size = size;
+    }
 }
