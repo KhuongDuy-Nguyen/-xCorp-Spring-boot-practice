@@ -17,8 +17,6 @@ public class ManufactureController {
     @Autowired
     ManufactureService manufactureService;
 
-    private static final Logger logger = org.slf4j.LoggerFactory.getLogger(ManufactureController.class);
-
     @GetMapping()
     public ResponseEntity<?> getAll(@RequestBody Page page){
         Pageable pageable = PageRequest.of(page.getPageNumber() - 1, page.getSize());
