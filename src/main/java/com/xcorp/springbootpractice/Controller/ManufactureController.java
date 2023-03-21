@@ -1,11 +1,8 @@
 package com.xcorp.springbootpractice.Controller;
 
 import com.xcorp.springbootpractice.Model.Manufacture;
-import com.xcorp.springbootpractice.Model.Page;
 import com.xcorp.springbootpractice.Service.ManufactureService;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +15,9 @@ public class ManufactureController {
     ManufactureService manufactureService;
 
     @GetMapping()
-    public ResponseEntity<?> getAll(@RequestBody Page page){
-        Pageable pageable = PageRequest.of(page.getPageNumber() - 1, page.getSize());
+    public ResponseEntity<?> getAll(@RequestParam("page") int page,
+                                    @RequestParam("size") int size){
+        Pageable pageable = PageRequest.of(page - 1, size);
        return ResponseEntity.ok(manufactureService.getAllManufactures(pageable));
     }
 

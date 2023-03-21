@@ -1,10 +1,12 @@
 package com.xcorp.springbootpractice.Service.Impl;
 
-import com.xcorp.springbootpractice.Model.Car;
-import com.xcorp.springbootpractice.Model.Manufacture;
+import com.xcorp.springbootpractice.Model.*;
 import com.xcorp.springbootpractice.Repository.CarRepository;
 import com.xcorp.springbootpractice.Repository.ManufactureRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.xcorp.springbootpractice.Repository.ModelRepository;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,12 +16,19 @@ import java.util.Optional;
 
 @Service
 public class CarServiceImpl implements com.xcorp.springbootpractice.Service.CarService {
+    private final Logger log = LoggerFactory.getLogger(CarServiceImpl.class);
 
-    @Autowired
-    private CarRepository carRepository;
+    private final CarRepository carRepository;
 
-    @Autowired
-    private ManufactureRepository manufactureRepository;
+    private final ManufactureRepository manufactureRepository;
+
+    private final ModelRepository modelRepository;
+
+    public CarServiceImpl(CarRepository carRepository, ManufactureRepository manufactureRepository, ModelRepository modelRepository) {
+        this.carRepository = carRepository;
+        this.manufactureRepository = manufactureRepository;
+        this.modelRepository = modelRepository;
+    }
 
     @Override
     public Page<List<Car>> getAllCars(Pageable pageable) {
@@ -31,19 +40,20 @@ public class CarServiceImpl implements com.xcorp.springbootpractice.Service.CarS
         return car.isPresent();
     }
 
-    private boolean checkHasManu(String id){
-        Optional<Manufacture> manu = manufactureRepository.findById(id);
-        return manu.isPresent();
+    private boolean checkHasManuAndModel(String idManu, String idModel){
+        Optional<Manufacture> manu = manufactureRepository.findById(idManu);
+        Optional<Model> model = modelRepository.findById(idModel);
+        return manu.isPresent() && model.isPresent();
     }
 
     
     @Override
     public Car createCar(Car newCar) throws Exception {
-        if(checkHasManu(newCar.getManufactureId().getId())) {
+        if(checkHasManuAndModel(newCar.getManufactureId().getId(), newCar.getModel().getId())) {
             newCar.setManufactureId(manufactureRepository.findManufactureById(newCar.getManufactureId().getId()));
             return carRepository.save(newCar);
         }else{
-            throw new Exception("Manufacture not found");
+            throw new Exception("Manufacture or model not found");
         }
     }
 
@@ -59,10 +69,10 @@ public class CarServiceImpl implements com.xcorp.springbootpractice.Service.CarS
             String manuId = newCar.getManufactureId().getId();
             oldCar.setBuyDate(newCar.getBuyDate());
 
-            if(checkHasManu(manuId)){
+            if(checkHasManuAndModel(newCar.getManufactureId().getId(), newCar.getModel().getId())){
                 oldCar.setManufactureId(manufactureRepository.findManufactureById(manuId));
             }else{
-                throw new Exception("Manufacture not found");
+                throw new Exception("Manufacture or model not found");
             }
             return carRepository.save(oldCar);
         }

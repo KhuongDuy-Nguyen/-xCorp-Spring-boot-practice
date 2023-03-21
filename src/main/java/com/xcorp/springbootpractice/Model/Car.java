@@ -1,6 +1,7 @@
 package com.xcorp.springbootpractice.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

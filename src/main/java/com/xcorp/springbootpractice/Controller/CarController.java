@@ -1,7 +1,6 @@
 package com.xcorp.springbootpractice.Controller;
 
 import com.xcorp.springbootpractice.Model.Car;
-import com.xcorp.springbootpractice.Model.Page;
 import com.xcorp.springbootpractice.Service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -17,20 +16,25 @@ public class CarController {
     private CarService carService;
 
     @GetMapping()
-    public ResponseEntity<?> getAll(@RequestBody Page page) {
-        Pageable pageable = PageRequest.of(page.getPageNumber() - 1, page.getSize());
+    public ResponseEntity<?> getAll(@RequestParam("page") int page, @RequestParam("size") int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
         return ResponseEntity.ok(carService.getAllCars(pageable));
     }
 
     @GetMapping("/desc")
-    public ResponseEntity<?> getAllByDesc(@RequestBody Page page) {
-        Pageable pageable = PageRequest.of(page.getPageNumber() - 1, page.getSize(), Sort.by(page.getSort()).descending());
+    public ResponseEntity<?> getAllByDesc(@RequestParam("page") int page,
+                                          @RequestParam("size") int size,
+                                          @RequestParam("sort") String sortBy) {
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sortBy).descending());
         return ResponseEntity.ok(carService.getAllCars(pageable));
     }
 
+
     @GetMapping("/asc")
-    public ResponseEntity<?> getAllByAsc(@RequestBody Page page) {
-        Pageable pageable = PageRequest.of(page.getPageNumber() - 1, page.getSize(), Sort.by(page.getSort()).ascending());
+    public ResponseEntity<?> getAllByAsc(@RequestParam("page") int page,
+                                         @RequestParam("size") int size,
+                                         @RequestParam("sort") String sortBy) {
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sortBy).ascending());
         return ResponseEntity.ok(carService.getAllCars(pageable));
     }
 
