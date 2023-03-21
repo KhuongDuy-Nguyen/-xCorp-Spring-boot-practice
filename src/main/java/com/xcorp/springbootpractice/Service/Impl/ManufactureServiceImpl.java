@@ -1,6 +1,8 @@
 package com.xcorp.springbootpractice.Service.Impl;
 
+import com.xcorp.springbootpractice.Model.Car;
 import com.xcorp.springbootpractice.Model.Manufacture;
+import com.xcorp.springbootpractice.Repository.CarRepository;
 import com.xcorp.springbootpractice.Repository.ManufactureRepository;
 import com.xcorp.springbootpractice.Service.ManufactureService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ import java.util.Optional;
 public class ManufactureServiceImpl implements ManufactureService {
     @Autowired
     private ManufactureRepository manufactureRepository;
+
+    @Autowired
+    private CarRepository carRepository;
 
     @Override
     public Page<List<Manufacture>> getAllManufactures(Pageable pageable){
@@ -32,13 +37,13 @@ public class ManufactureServiceImpl implements ManufactureService {
     }
 
     @Override
-    public Manufacture updateManufacture(Manufacture newManufacture, String id) throws Exception {
-        return manufactureRepository.findById(id).map(manufacture -> {
-            manufacture.setName(newManufacture.getName());
-            manufacture.setAddress(newManufacture.getAddress());
+    public Manufacture updateManufacture(Manufacture newManufacture) throws Exception {
+        return manufactureRepository.findById(newManufacture.getManufactureId()).map(manufacture -> {
+            manufacture.setManufactureName(newManufacture.getManufactureName());
+            manufacture.setManufactureAddress(newManufacture.getManufactureAddress());
             return manufactureRepository.save(manufacture);
         }).orElseGet(() -> {
-            newManufacture.setId(id);
+            newManufacture.setManufactureId(newManufacture.getManufactureId());
             return manufactureRepository.save(newManufacture);
         });
     }
@@ -46,8 +51,13 @@ public class ManufactureServiceImpl implements ManufactureService {
     @Override
     public String removeManufacture(String id) throws Exception {
         if(checkHasId(id)){
-            manufactureRepository.deleteById(id);
-            return "Delete success";
+            List<Car> cars = carRepository.findByCarManufacture_ManufactureId(id);
+            if(!cars.isEmpty()){
+                throw new Exception("Manufacture has cars");
+            }else{
+                manufactureRepository.deleteById(id);
+                return "Delete manufacture success";
+            }
         }else{
             throw new Exception("Manufacture not found");
         }

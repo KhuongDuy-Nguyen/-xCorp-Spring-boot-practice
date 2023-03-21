@@ -12,15 +12,16 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Model {
 
     @Id
-    private String id = UUID.randomUUID().toString();
+    private String modelId = UUID.randomUUID().toString();
 
     @NotNull
-    private String name;
+    private String modelName;
 
     public Model(String name) {
-        this.name = name;
+        this.modelName = name;
     }
 }

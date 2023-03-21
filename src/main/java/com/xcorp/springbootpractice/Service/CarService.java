@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface CarService {
     Page<List<Car>> getAllCars(Pageable pageable);
+    Page<List<Car>> filterCarByManufacture(String name, Pageable pageable);
+    Page<List<Car>> searchCarName(String name, Pageable pageable);
 
     Car createCar(Car newCar) throws Exception;
 

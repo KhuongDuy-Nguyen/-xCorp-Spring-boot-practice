@@ -5,19 +5,23 @@ import com.xcorp.springbootpractice.Repository.CarRepository;
 import com.xcorp.springbootpractice.Repository.ManufactureRepository;
 import com.xcorp.springbootpractice.Repository.ModelRepository;
 
+import com.xcorp.springbootpractice.Service.CarService;
+import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class CarServiceImpl implements com.xcorp.springbootpractice.Service.CarService {
-    private final Logger log = LoggerFactory.getLogger(CarServiceImpl.class);
+public class CarServiceImpl implements CarService {
 
+    private static final Logger logger = LoggerFactory.getLogger(CarServiceImpl.class);
     private final CarRepository carRepository;
 
     private final ManufactureRepository manufactureRepository;
@@ -35,46 +39,76 @@ public class CarServiceImpl implements com.xcorp.springbootpractice.Service.CarS
         return carRepository.findAll(pageable).map(List::of);
     }
 
+    @Override
+    public Page<List<Car>> filterCarByManufacture(String name, Pageable pageable) {
+        return carRepository.findByCarManufacture_ManufactureName(name, pageable);
+    }
+
+    @Override
+    public Page<List<Car>> searchCarName(String name, Pageable pageable) {
+        return carRepository.findByCarNameIsContaining(name, pageable);
+    }
+
+
     private boolean checkHasCar(String id){
         Optional<Car> car = carRepository.findById(id);
         return car.isPresent();
     }
 
-    private boolean checkHasManuAndModel(String idManu, String idModel){
-        Optional<Manufacture> manu = manufactureRepository.findById(idManu);
-        Optional<Model> model = modelRepository.findById(idModel);
-        return manu.isPresent() && model.isPresent();
+    private Map<String, Object> checkHasManuAndModel(String nameManu, String nameModel){
+
+        Map<String, Object> result = new HashMap<>();
+
+        Optional<Manufacture> manu = Optional.ofNullable(manufactureRepository.findByManufactureName(nameManu));
+        Optional<Model> model = Optional.ofNullable(modelRepository.findByModelName(nameModel));
+
+        if (manu.isPresent() && model.isPresent()) {
+            result.put("manufacture", manu.get());
+            result.put("model", model.get());
+            return result;
+        }else {
+            return Collections.emptyMap();
+        }
     }
 
     
     @Override
     public Car createCar(Car newCar) throws Exception {
-        if(checkHasManuAndModel(newCar.getManufactureId().getId(), newCar.getModel().getId())) {
-            newCar.setManufactureId(manufactureRepository.findManufactureById(newCar.getManufactureId().getId()));
+        String manuName = newCar.getCarManufacture().getManufactureName();
+        String modelName = newCar.getCarModel().getModelName();
+
+        Map<String, Object> check = checkHasManuAndModel(manuName, modelName);
+
+        if(!check.isEmpty()) {
+            logger.info("Manufacture and model found");
+            newCar.setCarManufacture((Manufacture) check.get("manufacture"));
+            newCar.setCarModel((Model) check.get("model"));
             return carRepository.save(newCar);
         }else{
             throw new Exception("Manufacture or model not found");
         }
     }
 
-    
     @Override
     public Car updateCar(Car newCar) throws Exception {
-        if(checkHasCar(newCar.getId())){
-            Car oldCar = carRepository.findCarById(newCar.getId());
+        if(checkHasCar(newCar.getCarId())){
+            Car oldCar = carRepository.findByCarId(newCar.getCarId());
 
-            oldCar.setName(newCar.getName());
-            oldCar.setModel(newCar.getModel());
+            String manuName = newCar.getCarManufacture().getManufactureName();
+            String modelName = newCar.getCarModel().getModelName();
 
-            String manuId = newCar.getManufactureId().getId();
+            Map<String, Object> check = checkHasManuAndModel(manuName, modelName);
+
+            oldCar.setCarName(newCar.getCarName());
             oldCar.setBuyDate(newCar.getBuyDate());
+            if (!check.isEmpty()) {
+                oldCar.setCarManufacture((Manufacture) check.get("manufacture"));
+                oldCar.setCarModel((Model) check.get("model"));
 
-            if(checkHasManuAndModel(newCar.getManufactureId().getId(), newCar.getModel().getId())){
-                oldCar.setManufactureId(manufactureRepository.findManufactureById(manuId));
+                return carRepository.save(oldCar);
             }else{
                 throw new Exception("Manufacture or model not found");
             }
-            return carRepository.save(oldCar);
         }
         else{
             throw new Exception("Car not found");

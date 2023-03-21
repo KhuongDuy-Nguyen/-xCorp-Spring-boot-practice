@@ -17,7 +17,7 @@ public class ManufactureController {
     @GetMapping()
     public ResponseEntity<?> getAll(@RequestParam("page") int page,
                                     @RequestParam("size") int size){
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Pageable pageable = PageRequest.of(page, size);
        return ResponseEntity.ok(manufactureService.getAllManufactures(pageable));
     }
 
@@ -26,13 +26,13 @@ public class ManufactureController {
         return ResponseEntity.ok(manufactureService.createManufacture(newManufacture));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?>  updateManufacture(@RequestBody Manufacture newManufacture, @PathVariable String id) throws Exception {
-        return ResponseEntity.ok(manufactureService.updateManufacture(newManufacture, id));
+    @PutMapping()
+    public ResponseEntity<?>  updateManufacture(@RequestBody Manufacture newManufacture) throws Exception {
+        return ResponseEntity.ok(manufactureService.updateManufacture(newManufacture));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?>  deleteManufacture(@PathVariable String id) throws Exception {
+    @DeleteMapping()
+    public ResponseEntity<?>  deleteManufacture(@RequestParam String id) throws Exception {
         return ResponseEntity.ok(manufactureService.removeManufacture(id));
     }
 

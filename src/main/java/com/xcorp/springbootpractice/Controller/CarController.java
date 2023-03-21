@@ -17,7 +17,7 @@ public class CarController {
 
     @GetMapping()
     public ResponseEntity<?> getAll(@RequestParam("page") int page, @RequestParam("size") int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(carService.getAllCars(pageable));
     }
 
@@ -25,17 +25,32 @@ public class CarController {
     public ResponseEntity<?> getAllByDesc(@RequestParam("page") int page,
                                           @RequestParam("size") int size,
                                           @RequestParam("sort") String sortBy) {
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sortBy).descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
         return ResponseEntity.ok(carService.getAllCars(pageable));
     }
-
 
     @GetMapping("/asc")
     public ResponseEntity<?> getAllByAsc(@RequestParam("page") int page,
                                          @RequestParam("size") int size,
                                          @RequestParam("sort") String sortBy) {
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(sortBy).ascending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
         return ResponseEntity.ok(carService.getAllCars(pageable));
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<?> filterCarByManufacture(@RequestParam("name") String name,
+                                                    @RequestParam("page") int page,
+                                                    @RequestParam("size") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(carService.filterCarByManufacture(name, pageable));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchCarName(@RequestParam("name") String name,
+                                           @RequestParam("page") int page,
+                                           @RequestParam("size") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(carService.searchCarName(name, pageable));
     }
 
     @PostMapping()
@@ -48,8 +63,8 @@ public class CarController {
         return ResponseEntity.ok(carService.updateCar(newCar));
     }
 
-    @DeleteMapping({"/{id}"})
-    public ResponseEntity<?> deleteCar(@PathVariable String id) throws Exception {
+    @DeleteMapping()
+    public ResponseEntity<?> deleteCar(@RequestParam String id) throws Exception {
         return ResponseEntity.ok(carService.removeCar(id));
     }
 

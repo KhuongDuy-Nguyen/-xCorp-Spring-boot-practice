@@ -1,9 +1,6 @@
 package com.xcorp.springbootpractice.Model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Entity;
@@ -19,19 +16,19 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Validated
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "id"))
+@ToString
 public class Manufacture {
     @Id
-    private String id = UUID.randomUUID().toString();
+    private String manufactureId = UUID.randomUUID().toString();
 
     @NotNull
-    private String name;
+    private String manufactureName;
 
     @NotNull
-    private String address;
+    private String manufactureAddress;
 
     public Manufacture(String name, String address) {
-        this.name = name;
-        this.address = address;
+        this.manufactureName = name;
+        this.manufactureAddress = address;
     }
 }
