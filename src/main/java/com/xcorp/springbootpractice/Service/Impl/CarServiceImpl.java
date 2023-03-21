@@ -9,6 +9,7 @@ import com.xcorp.springbootpractice.Service.CarService;
 import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,17 +23,16 @@ import java.util.Optional;
 public class CarServiceImpl implements CarService {
 
     private static final Logger logger = LoggerFactory.getLogger(CarServiceImpl.class);
-    private final CarRepository carRepository;
 
-    private final ManufactureRepository manufactureRepository;
+    @Autowired
+    private CarRepository carRepository;
 
-    private final ModelRepository modelRepository;
+    @Autowired
+    private ManufactureRepository manufactureRepository;
 
-    public CarServiceImpl(CarRepository carRepository, ManufactureRepository manufactureRepository, ModelRepository modelRepository) {
-        this.carRepository = carRepository;
-        this.manufactureRepository = manufactureRepository;
-        this.modelRepository = modelRepository;
-    }
+    @Autowired
+    private ModelRepository modelRepository;
+
 
     @Override
     public Page<List<Car>> getAllCars(Pageable pageable) {
