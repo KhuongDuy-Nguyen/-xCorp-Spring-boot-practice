@@ -15,7 +15,7 @@ Following these upon wireframes use Spring Boot framework to implement backend A
 
 
 ### DB Diagram
-![image](https://user-images.githubusercontent.com/57941238/225879027-e75c90cf-6546-415e-9456-405a5d32e8e6.png)
+![image](https://user-images.githubusercontent.com/57941238/226847866-b0879e24-a2b4-4715-aa91-d6b133f50068.png)
 
 >- You can access swagger-ui from **[here](http://localhost:8080/swagger-ui/#/)** after running the application.
 >- All database tables will be created automatically by Spring Boot.
