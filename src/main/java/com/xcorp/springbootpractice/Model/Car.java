@@ -1,23 +1,24 @@
 package com.xcorp.springbootpractice.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Validated
-@ToString
-public class Car {
+public class Car{
     @Id
     private String carId = UUID.randomUUID().toString();
 

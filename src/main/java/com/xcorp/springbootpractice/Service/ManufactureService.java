@@ -1,17 +1,16 @@
 package com.xcorp.springbootpractice.Service;
 
-import com.xcorp.springbootpractice.Model.Manufacture;
+import com.xcorp.springbootpractice.DTO.Request.Req_ManufactureDTO;
+import com.xcorp.springbootpractice.DTO.Response.Res_ManufactureDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public interface ManufactureService {
-    Page<List<Manufacture>> getAllManufactures(Pageable pageable);
+    Page<Res_ManufactureDTO> getAllManufactures(Pageable pageable);
 
-    Manufacture createManufacture(Manufacture manufacture);
+    Res_ManufactureDTO createManufacture(Req_ManufactureDTO manufacture);
 
-    Manufacture updateManufacture(Manufacture newManufacture) throws Exception;
+    Res_ManufactureDTO updateManufacture(Req_ManufactureDTO newManufacture) throws Exception;
 
     String removeManufacture(String id) throws Exception;
 }

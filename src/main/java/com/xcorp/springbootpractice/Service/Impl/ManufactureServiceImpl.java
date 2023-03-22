@@ -1,5 +1,8 @@
 package com.xcorp.springbootpractice.Service.Impl;
 
+import com.xcorp.springbootpractice.DTO.Interfaces.ManufactureMapper;
+import com.xcorp.springbootpractice.DTO.Request.Req_ManufactureDTO;
+import com.xcorp.springbootpractice.DTO.Response.Res_ManufactureDTO;
 import com.xcorp.springbootpractice.Model.Car;
 import com.xcorp.springbootpractice.Model.Manufacture;
 import com.xcorp.springbootpractice.Repository.CarRepository;
@@ -19,11 +22,14 @@ public class ManufactureServiceImpl implements ManufactureService {
     private ManufactureRepository manufactureRepository;
 
     @Autowired
+    private ManufactureMapper resManufactureMapper;
+
+    @Autowired
     private CarRepository carRepository;
 
     @Override
-    public Page<List<Manufacture>> getAllManufactures(Pageable pageable){
-        return manufactureRepository.findAll(pageable).map(List::of);
+    public Page<Res_ManufactureDTO> getAllManufactures(Pageable pageable){
+        return manufactureRepository.findAll(pageable).map(resManufactureMapper::manufactureToManufactureDTO);
     }
 
     private boolean checkHasId(String id){
@@ -32,20 +38,28 @@ public class ManufactureServiceImpl implements ManufactureService {
     }
 
     @Override
-    public Manufacture createManufacture(Manufacture manufacture){
-        return manufactureRepository.save(manufacture);
+    public Res_ManufactureDTO createManufacture(Req_ManufactureDTO newManufacture){
+        Manufacture manufacture = new Manufacture();
+        manufacture.setManufactureName(newManufacture.getManufactureName());
+        manufacture.setManufactureAddress(newManufacture.getManufactureAddress());
+        manufactureRepository.save(manufacture);
+
+        return resManufactureMapper.manufactureToManufactureDTO(manufacture);
     }
 
     @Override
-    public Manufacture updateManufacture(Manufacture newManufacture) throws Exception {
-        return manufactureRepository.findById(newManufacture.getManufactureId()).map(manufacture -> {
-            manufacture.setManufactureName(newManufacture.getManufactureName());
-            manufacture.setManufactureAddress(newManufacture.getManufactureAddress());
-            return manufactureRepository.save(manufacture);
-        }).orElseGet(() -> {
-            newManufacture.setManufactureId(newManufacture.getManufactureId());
-            return manufactureRepository.save(newManufacture);
-        });
+    public Res_ManufactureDTO updateManufacture(Req_ManufactureDTO newManufacture) throws Exception {
+        Optional<Manufacture> manufacture = manufactureRepository.findById(newManufacture.getManufactureId());
+
+        if(manufacture.isPresent()){
+            manufacture.get().setManufactureName(newManufacture.getManufactureName());
+            manufacture.get().setManufactureAddress(newManufacture.getManufactureAddress());
+            manufactureRepository.save(manufacture.get());
+            return resManufactureMapper.manufactureToManufactureDTO(manufacture.get());
+        }else{
+            throw new Exception("Manufacture not found");
+        }
+
     }
 
     @Override

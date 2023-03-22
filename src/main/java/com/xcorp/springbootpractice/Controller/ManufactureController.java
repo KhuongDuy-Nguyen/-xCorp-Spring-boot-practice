@@ -1,6 +1,6 @@
 package com.xcorp.springbootpractice.Controller;
 
-import com.xcorp.springbootpractice.Model.Manufacture;
+import com.xcorp.springbootpractice.DTO.Request.Req_ManufactureDTO;
 import com.xcorp.springbootpractice.Service.ManufactureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -22,12 +22,12 @@ public class ManufactureController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> createManufacture(@RequestBody Manufacture newManufacture){
+    public ResponseEntity<?> createManufacture(@RequestBody Req_ManufactureDTO newManufacture){
         return ResponseEntity.ok(manufactureService.createManufacture(newManufacture));
     }
 
     @PutMapping()
-    public ResponseEntity<?>  updateManufacture(@RequestBody Manufacture newManufacture) throws Exception {
+    public ResponseEntity<?>  updateManufacture(@RequestBody Req_ManufactureDTO newManufacture) throws Exception {
         return ResponseEntity.ok(manufactureService.updateManufacture(newManufacture));
     }
 

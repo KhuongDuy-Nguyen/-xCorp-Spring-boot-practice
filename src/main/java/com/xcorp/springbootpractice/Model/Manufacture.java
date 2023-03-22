@@ -1,23 +1,21 @@
 package com.xcorp.springbootpractice.Model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
+@Data
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Validated
-@ToString
-public class Manufacture {
+public class Manufacture{
     @Id
     private String manufactureId = UUID.randomUUID().toString();
 

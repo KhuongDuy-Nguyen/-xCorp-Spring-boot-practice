@@ -13,7 +13,7 @@ public interface CarRepository extends JpaRepository<Car, String> {
 
     List<Car> findByCarManufacture_ManufactureId(String id);
 
-    Page<List<Car>> findByCarManufacture_ManufactureName(String name, Pageable pageable);
+    Page<Car> findByCarManufacture_ManufactureName(String name, Pageable pageable);
 
-    Page<List<Car>> findByCarNameIsContaining(String name, Pageable pageable);
+    Page<Car> findByCarNameIsContaining(String name, Pageable pageable);
 }

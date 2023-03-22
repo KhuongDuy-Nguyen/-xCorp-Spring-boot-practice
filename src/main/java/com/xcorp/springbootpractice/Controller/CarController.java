@@ -1,6 +1,6 @@
 package com.xcorp.springbootpractice.Controller;
 
-import com.xcorp.springbootpractice.Model.Car;
+import com.xcorp.springbootpractice.DTO.Request.Req_CarDTO;
 import com.xcorp.springbootpractice.Service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -38,7 +38,7 @@ public class CarController {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<?> filterCarByManufacture(@RequestParam("name") String name,
+    public ResponseEntity<?> filterCarByManufacture(@RequestParam("manufacture") String name,
                                                     @RequestParam("page") int page,
                                                     @RequestParam("size") int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -54,12 +54,12 @@ public class CarController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> createCar(@RequestBody Car newCar) throws Exception {
+    public ResponseEntity<?> createCar(@RequestBody Req_CarDTO newCar) throws Exception {
         return ResponseEntity.ok(carService.createCar(newCar));
     }
 
     @PutMapping()
-    public ResponseEntity<?> updateCar(@RequestBody Car newCar) throws Exception {
+    public ResponseEntity<?> updateCar(@RequestBody Req_CarDTO newCar) throws Exception {
         return ResponseEntity.ok(carService.updateCar(newCar));
     }
 

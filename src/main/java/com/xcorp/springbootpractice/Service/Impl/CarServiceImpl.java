@@ -1,12 +1,15 @@
 package com.xcorp.springbootpractice.Service.Impl;
 
-import com.xcorp.springbootpractice.Model.*;
+import com.xcorp.springbootpractice.DTO.Interfaces.CarMapper;
+import com.xcorp.springbootpractice.DTO.Request.Req_CarDTO;
+import com.xcorp.springbootpractice.DTO.Response.Res_CarDTO;
+import com.xcorp.springbootpractice.Model.Car;
+import com.xcorp.springbootpractice.Model.Manufacture;
+import com.xcorp.springbootpractice.Model.Model;
 import com.xcorp.springbootpractice.Repository.CarRepository;
 import com.xcorp.springbootpractice.Repository.ManufactureRepository;
 import com.xcorp.springbootpractice.Repository.ModelRepository;
-
 import com.xcorp.springbootpractice.Service.CarService;
-import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -28,6 +28,9 @@ public class CarServiceImpl implements CarService {
     private CarRepository carRepository;
 
     @Autowired
+    private CarMapper resCarMapper;
+
+    @Autowired
     private ManufactureRepository manufactureRepository;
 
     @Autowired
@@ -35,18 +38,18 @@ public class CarServiceImpl implements CarService {
 
 
     @Override
-    public Page<List<Car>> getAllCars(Pageable pageable) {
-        return carRepository.findAll(pageable).map(List::of);
+    public Page<Res_CarDTO> getAllCars(Pageable pageable) {
+        return carRepository.findAll(pageable).map(resCarMapper::carToCarDTO);
     }
 
     @Override
-    public Page<List<Car>> filterCarByManufacture(String name, Pageable pageable) {
-        return carRepository.findByCarManufacture_ManufactureName(name, pageable);
+    public Page<Res_CarDTO> filterCarByManufacture(String name, Pageable pageable) {
+        return carRepository.findByCarManufacture_ManufactureName(name, pageable).map(resCarMapper::carToCarDTO);
     }
 
     @Override
-    public Page<List<Car>> searchCarName(String name, Pageable pageable) {
-        return carRepository.findByCarNameIsContaining(name, pageable);
+    public Page<Res_CarDTO> searchCarName(String name, Pageable pageable) {
+        return carRepository.findByCarNameIsContaining(name, pageable).map(resCarMapper::carToCarDTO);
     }
 
 
@@ -54,60 +57,50 @@ public class CarServiceImpl implements CarService {
         Optional<Car> car = carRepository.findById(id);
         return car.isPresent();
     }
-
-    private Map<String, Object> checkHasManuAndModel(String nameManu, String nameModel){
-
-        Map<String, Object> result = new HashMap<>();
-
-        Optional<Manufacture> manu = Optional.ofNullable(manufactureRepository.findByManufactureName(nameManu));
-        Optional<Model> model = Optional.ofNullable(modelRepository.findByModelName(nameModel));
-
-        if (manu.isPresent() && model.isPresent()) {
-            result.put("manufacture", manu.get());
-            result.put("model", model.get());
-            return result;
-        }else {
-            return Collections.emptyMap();
-        }
-    }
-
     
     @Override
-    public Car createCar(Car newCar) throws Exception {
-        String manuName = newCar.getCarManufacture().getManufactureName();
-        String modelName = newCar.getCarModel().getModelName();
+    public Res_CarDTO createCar(Req_CarDTO newCar) throws Exception {
+        Optional<Manufacture> manufacture = manufactureRepository.findById(newCar.getCarManufactureId());
+        Optional<Model> model = modelRepository.findById(newCar.getCarModelId());
 
-        Map<String, Object> check = checkHasManuAndModel(manuName, modelName);
-
-        if(!check.isEmpty()) {
-            logger.info("Manufacture and model found");
-            newCar.setCarManufacture((Manufacture) check.get("manufacture"));
-            newCar.setCarModel((Model) check.get("model"));
-            return carRepository.save(newCar);
+        if(model.isEmpty()) {
+            throw new Exception ("Model not found");
+        }else if(manufacture.isEmpty()){
+            throw new Exception("Manufacture not found");
         }else{
-            throw new Exception("Manufacture or model not found");
+            Car car = new Car();
+
+            car.setCarName(newCar.getCarName());
+            car.setBuyDate(newCar.getBuyDate());
+            car.setCarManufacture(manufacture.get());
+            car.setCarModel(model.get());
+
+            carRepository.save(car);
+            return resCarMapper.carToCarDTO(car);
         }
     }
 
     @Override
-    public Car updateCar(Car newCar) throws Exception {
+    public Res_CarDTO updateCar(Req_CarDTO newCar) throws Exception {
         if(checkHasCar(newCar.getCarId())){
-            Car oldCar = carRepository.findByCarId(newCar.getCarId());
 
-            String manuName = newCar.getCarManufacture().getManufactureName();
-            String modelName = newCar.getCarModel().getModelName();
+            Optional<Manufacture> manufacture = manufactureRepository.findById(newCar.getCarManufactureId());
+            Optional<Model> model = modelRepository.findById(newCar.getCarModelId());
 
-            Map<String, Object> check = checkHasManuAndModel(manuName, modelName);
-
-            oldCar.setCarName(newCar.getCarName());
-            oldCar.setBuyDate(newCar.getBuyDate());
-            if (!check.isEmpty()) {
-                oldCar.setCarManufacture((Manufacture) check.get("manufacture"));
-                oldCar.setCarModel((Model) check.get("model"));
-
-                return carRepository.save(oldCar);
+            if(model.isEmpty()) {
+                throw new Exception("Model not found");
+            }else if(manufacture.isEmpty()){
+                throw new Exception("Manufacture not found");
             }else{
-                throw new Exception("Manufacture or model not found");
+                Car oldCar = carRepository.findByCarId(newCar.getCarId());
+
+                oldCar.setCarName(newCar.getCarName());
+                oldCar.setBuyDate(newCar.getBuyDate());
+                oldCar.setCarManufacture(manufacture.get());
+                oldCar.setCarModel(model.get());
+                carRepository.save(oldCar);
+
+                return resCarMapper.carToCarDTO(oldCar);
             }
         }
         else{
