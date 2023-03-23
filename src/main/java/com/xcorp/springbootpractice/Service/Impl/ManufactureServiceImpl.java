@@ -3,6 +3,8 @@ package com.xcorp.springbootpractice.Service.Impl;
 import com.xcorp.springbootpractice.DTO.Interfaces.ManufactureMapper;
 import com.xcorp.springbootpractice.DTO.Request.Req_ManufactureDTO;
 import com.xcorp.springbootpractice.DTO.Response.Res_ManufactureDTO;
+import com.xcorp.springbootpractice.Exception.HasExistException;
+import com.xcorp.springbootpractice.Exception.NotFoundException;
 import com.xcorp.springbootpractice.Model.Car;
 import com.xcorp.springbootpractice.Model.Manufacture;
 import com.xcorp.springbootpractice.Repository.CarRepository;
@@ -48,7 +50,7 @@ public class ManufactureServiceImpl implements ManufactureService {
     }
 
     @Override
-    public Res_ManufactureDTO updateManufacture(Req_ManufactureDTO newManufacture) throws Exception {
+    public Res_ManufactureDTO updateManufacture(Req_ManufactureDTO newManufacture){
         Optional<Manufacture> manufacture = manufactureRepository.findById(newManufacture.getManufactureId());
 
         if(manufacture.isPresent()){
@@ -57,23 +59,23 @@ public class ManufactureServiceImpl implements ManufactureService {
             manufactureRepository.save(manufacture.get());
             return resManufactureMapper.manufactureToManufactureDTO(manufacture.get());
         }else{
-            throw new Exception("Manufacture not found");
+            throw new NotFoundException("Manufacture not found");
         }
 
     }
 
     @Override
-    public String removeManufacture(String id) throws Exception {
+    public String removeManufacture(String id){
         if(checkHasId(id)){
             List<Car> cars = carRepository.findByCarManufacture_ManufactureId(id);
             if(!cars.isEmpty()){
-                throw new Exception("Manufacture has cars");
+                throw new HasExistException("Manufacture has cars");
             }else{
                 manufactureRepository.deleteById(id);
                 return "Delete manufacture success";
             }
         }else{
-            throw new Exception("Manufacture not found");
+            throw new NotFoundException("Manufacture not found");
         }
     }
 }

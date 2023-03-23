@@ -10,9 +10,9 @@ public interface CarService {
     Page<Res_CarDTO> filterCarByManufacture(String name, Pageable pageable);
     Page<Res_CarDTO> searchCarName(String name, Pageable pageable);
 
-    Res_CarDTO createCar(Req_CarDTO newCar) throws Exception;
+    Res_CarDTO createCar(Req_CarDTO newCar);
 
-    Res_CarDTO updateCar(Req_CarDTO newCar) throws Exception;
+    Res_CarDTO updateCar(Req_CarDTO newCar);
 
-    String removeCar(String id) throws Exception;
+    String removeCar(String id);
 }

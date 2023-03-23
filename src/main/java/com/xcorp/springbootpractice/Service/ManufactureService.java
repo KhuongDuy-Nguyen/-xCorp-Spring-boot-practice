@@ -10,7 +10,7 @@ public interface ManufactureService {
 
     Res_ManufactureDTO createManufacture(Req_ManufactureDTO manufacture);
 
-    Res_ManufactureDTO updateManufacture(Req_ManufactureDTO newManufacture) throws Exception;
+    Res_ManufactureDTO updateManufacture(Req_ManufactureDTO newManufacture);
 
-    String removeManufacture(String id) throws Exception;
+    String removeManufacture(String id);
 }

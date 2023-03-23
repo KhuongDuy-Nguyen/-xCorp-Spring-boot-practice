@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/manufacture")
 public class ManufactureController {
@@ -22,22 +24,17 @@ public class ManufactureController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> createManufacture(@RequestBody Req_ManufactureDTO newManufacture){
+    public ResponseEntity<?> createManufacture(@RequestBody @Valid Req_ManufactureDTO newManufacture){
         return ResponseEntity.ok(manufactureService.createManufacture(newManufacture));
     }
 
     @PutMapping()
-    public ResponseEntity<?>  updateManufacture(@RequestBody Req_ManufactureDTO newManufacture) throws Exception {
+    public ResponseEntity<?>  updateManufacture(@RequestBody @Valid Req_ManufactureDTO newManufacture) throws Exception {
         return ResponseEntity.ok(manufactureService.updateManufacture(newManufacture));
     }
 
     @DeleteMapping()
     public ResponseEntity<?>  deleteManufacture(@RequestParam String id) throws Exception {
         return ResponseEntity.ok(manufactureService.removeManufacture(id));
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception e){
-        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

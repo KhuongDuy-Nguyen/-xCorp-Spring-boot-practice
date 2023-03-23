@@ -1,6 +1,5 @@
 package com.xcorp.springbootpractice.DTO.Request;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
+//@Validated
 public class Req_ModelDTO {
+
+//    @NotBlank(message = "modelId is required")
     private String modelId;
+
+//    @NotBlank(message = "modelName is required")
     private String modelName;
 }

@@ -3,6 +3,7 @@ package com.xcorp.springbootpractice.Service.Impl;
 import com.xcorp.springbootpractice.DTO.Interfaces.CarMapper;
 import com.xcorp.springbootpractice.DTO.Request.Req_CarDTO;
 import com.xcorp.springbootpractice.DTO.Response.Res_CarDTO;
+import com.xcorp.springbootpractice.Exception.NotFoundException;
 import com.xcorp.springbootpractice.Model.Car;
 import com.xcorp.springbootpractice.Model.Manufacture;
 import com.xcorp.springbootpractice.Model.Model;
@@ -59,14 +60,14 @@ public class CarServiceImpl implements CarService {
     }
     
     @Override
-    public Res_CarDTO createCar(Req_CarDTO newCar) throws Exception {
+    public Res_CarDTO createCar(Req_CarDTO newCar){
         Optional<Manufacture> manufacture = manufactureRepository.findById(newCar.getCarManufactureId());
         Optional<Model> model = modelRepository.findById(newCar.getCarModelId());
 
         if(model.isEmpty()) {
-            throw new Exception ("Model not found");
+            throw new NotFoundException ("Model not found");
         }else if(manufacture.isEmpty()){
-            throw new Exception("Manufacture not found");
+            throw new NotFoundException("Manufacture not found");
         }else{
             Car car = new Car();
 
@@ -81,16 +82,16 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public Res_CarDTO updateCar(Req_CarDTO newCar) throws Exception {
+    public Res_CarDTO updateCar(Req_CarDTO newCar){
         if(checkHasCar(newCar.getCarId())){
 
             Optional<Manufacture> manufacture = manufactureRepository.findById(newCar.getCarManufactureId());
             Optional<Model> model = modelRepository.findById(newCar.getCarModelId());
 
             if(model.isEmpty()) {
-                throw new Exception("Model not found");
+                throw new NotFoundException("Model not found");
             }else if(manufacture.isEmpty()){
-                throw new Exception("Manufacture not found");
+                throw new NotFoundException("Manufacture not found");
             }else{
                 Car oldCar = carRepository.findByCarId(newCar.getCarId());
 
@@ -104,18 +105,18 @@ public class CarServiceImpl implements CarService {
             }
         }
         else{
-            throw new Exception("Car not found");
+            throw new NotFoundException("Car not found");
         }
     }
 
     
     @Override
-    public String removeCar(String id) throws Exception {
+    public String removeCar(String id){
         if(checkHasCar(id)){
             carRepository.deleteById(id);
             return "Delete success";
         }else{
-            throw new Exception("Car not found");
+            throw new NotFoundException("Car not found");
         }
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/car")
 public class CarController {
@@ -54,23 +56,17 @@ public class CarController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> createCar(@RequestBody Req_CarDTO newCar) throws Exception {
+    public ResponseEntity<?> createCar(@RequestBody @Valid Req_CarDTO newCar){
         return ResponseEntity.ok(carService.createCar(newCar));
     }
 
     @PutMapping()
-    public ResponseEntity<?> updateCar(@RequestBody Req_CarDTO newCar) throws Exception {
+    public ResponseEntity<?> updateCar(@RequestBody @Valid Req_CarDTO newCar){
         return ResponseEntity.ok(carService.updateCar(newCar));
     }
 
     @DeleteMapping()
-    public ResponseEntity<?> deleteCar(@RequestParam String id) throws Exception {
+    public ResponseEntity<?> deleteCar(@RequestParam String id){
         return ResponseEntity.ok(carService.removeCar(id));
-    }
-
-//    Hander Exception
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception e){
-        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }
