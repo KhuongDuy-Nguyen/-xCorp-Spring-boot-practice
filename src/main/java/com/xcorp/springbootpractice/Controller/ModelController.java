@@ -11,11 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/model")
 public class ModelController {
 
-    @Autowired
-    private ModelRepository modelRepository;
+  @Autowired private ModelRepository modelRepository;
 
-    @GetMapping()
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(modelRepository.findAll());
-    }
+  @GetMapping()
+  public ResponseEntity<?> getAll() {
+    return ResponseEntity.ok(modelRepository.findAll());
+  }
 }

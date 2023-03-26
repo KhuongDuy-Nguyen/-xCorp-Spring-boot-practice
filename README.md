@@ -6,16 +6,20 @@ API manufacture and car management
 
 ![a2](https://user-images.githubusercontent.com/57941238/225817488-0b7cc2d4-ba2f-42c5-803b-89c924192712.png)
 
-Following these upon wireframes use Spring Boot framework to implement backend API for car management system step by step:
+Following these upon wireframes use Spring Boot framework to implement backend API for car
+management system step by step:
 
 1. Create manufacture management feature with pagination.
 2. Create car management feature with pagination.
-3. Optional: In car management screen make the grid sortable(Name, Model, Manufacture, Buy Date) and apply filter.
+3. Optional: In car management screen make the grid sortable(Name, Model, Manufacture, Buy Date) and
+   apply filter.
+
 > Requirement: Java 11+, Spring Boot 4, Spring JPA, Hibernate, Posgres.
 
-
 ### DB Diagram
+
 ![image](https://user-images.githubusercontent.com/57941238/226847866-b0879e24-a2b4-4715-aa91-d6b133f50068.png)
 
->- You can access swagger-ui from **[here](http://localhost:8080/swagger-ui/#/)** after running the application.
+> - You can access swagger-ui from **[here](http://localhost:8080/swagger-ui/#/)** after running the
+    application.
 >- All database tables will be created automatically by Spring Boot.

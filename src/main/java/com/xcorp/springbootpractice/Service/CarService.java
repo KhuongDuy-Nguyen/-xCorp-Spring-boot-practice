@@ -1,18 +1,20 @@
 package com.xcorp.springbootpractice.Service;
 
-import com.xcorp.springbootpractice.DTO.Request.Req_CarDTO;
-import com.xcorp.springbootpractice.DTO.Response.Res_CarDTO;
+import com.xcorp.springbootpractice.DTO.Request.ReqCarDto;
+import com.xcorp.springbootpractice.DTO.Response.ResCarDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CarService {
-    Page<Res_CarDTO> getAllCars(Pageable pageable);
-    Page<Res_CarDTO> filterCarByManufacture(String name, Pageable pageable);
-    Page<Res_CarDTO> searchCarName(String name, Pageable pageable);
+  Page<ResCarDto> getAllCars(Pageable pageable);
 
-    Res_CarDTO createCar(Req_CarDTO newCar);
+  Page<ResCarDto> filterCarByManufacture(String name, Pageable pageable);
 
-    Res_CarDTO updateCar(Req_CarDTO newCar);
+  Page<ResCarDto> searchCarName(String name, Pageable pageable);
 
-    String removeCar(String id);
+  ResCarDto createCar(ReqCarDto newCar);
+
+  ResCarDto updateCar(ReqCarDto newCar);
+
+  String removeCar(String id);
 }
