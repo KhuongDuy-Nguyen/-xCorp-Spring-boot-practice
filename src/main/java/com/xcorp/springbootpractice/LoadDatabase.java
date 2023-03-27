@@ -1,11 +1,11 @@
 package com.xcorp.springbootpractice;
 
-import com.xcorp.springbootpractice.Model.Car;
-import com.xcorp.springbootpractice.Model.Manufacture;
-import com.xcorp.springbootpractice.Model.Model;
-import com.xcorp.springbootpractice.Repository.CarRepository;
-import com.xcorp.springbootpractice.Repository.ManufactureRepository;
-import com.xcorp.springbootpractice.Repository.ModelRepository;
+import com.xcorp.springbootpractice.entity.Car;
+import com.xcorp.springbootpractice.entity.Manufacture;
+import com.xcorp.springbootpractice.entity.Model;
+import com.xcorp.springbootpractice.repository.CarRepository;
+import com.xcorp.springbootpractice.repository.ManufactureRepository;
+import com.xcorp.springbootpractice.repository.ModelRepository;
 import java.util.Date;
 import java.util.Random;
 import org.springframework.boot.CommandLineRunner;
