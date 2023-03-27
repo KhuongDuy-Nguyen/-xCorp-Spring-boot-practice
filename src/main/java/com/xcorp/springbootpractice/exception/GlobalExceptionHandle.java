@@ -17,6 +17,13 @@ public class GlobalExceptionHandle {
         e.getBindingResult().getAllErrors().get(0).getDefaultMessage(), "400", "Bad Request");
   }
 
+  @ExceptionHandler(Exception.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  public ErrorResponse handleException(Exception e) {
+    return new ErrorResponse(e.getMessage(), "500", "Internal Server Error");
+  }
+
+
   @ExceptionHandler(SecurityException.class)
   @ResponseStatus(HttpStatus.UNAUTHORIZED)
   @ResponseBody
